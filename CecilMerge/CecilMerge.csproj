@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net35;netstandard2.0</TargetFrameworks>
+        <DebugSymbols>True</DebugSymbols>
+        <DebugType>Embedded</DebugType>
+        <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+        <LangVersion>7.3</LangVersion> <!-- Explicit Language Versioning for sanity because it's what our TargetFrameworks support -->
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="All"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Include="CecilMerge.csproj.user" />
+    </ItemGroup>
+
+</Project>
