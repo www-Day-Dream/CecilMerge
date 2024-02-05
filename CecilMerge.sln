@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CecilMerge", "CecilMerge\CecilMerge.csproj", "{0A91DD5B-283F-422A-A80F-8CB61A054308}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CecilMerge.Runtime", "CecilMerge.Runtime\CecilMerge.Runtime.csproj", "{0A91DD5B-283F-422A-A80F-8CB61A054308}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CecilMerge.Preloader", "CecilMerge.Preloader\CecilMerge.Preloader.csproj", "{DC830A5C-B712-413D-B0EB-585C8D46BCF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPluginA", "UnitTests\TestPluginA\TestPluginA.csproj", "{3300809E-D1CF-459E-A581-A497AF821DB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +16,21 @@ Global
 		{0A91DD5B-283F-422A-A80F-8CB61A054308}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A91DD5B-283F-422A-A80F-8CB61A054308}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A91DD5B-283F-422A-A80F-8CB61A054308}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DF38BA9-0813-4352-BDE4-3EE9C13C9ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DF38BA9-0813-4352-BDE4-3EE9C13C9ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DF38BA9-0813-4352-BDE4-3EE9C13C9ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DF38BA9-0813-4352-BDE4-3EE9C13C9ED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE8370C6-2625-4B96-9557-B3A8B6350F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE8370C6-2625-4B96-9557-B3A8B6350F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE8370C6-2625-4B96-9557-B3A8B6350F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE8370C6-2625-4B96-9557-B3A8B6350F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC830A5C-B712-413D-B0EB-585C8D46BCF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC830A5C-B712-413D-B0EB-585C8D46BCF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC830A5C-B712-413D-B0EB-585C8D46BCF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC830A5C-B712-413D-B0EB-585C8D46BCF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3300809E-D1CF-459E-A581-A497AF821DB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3300809E-D1CF-459E-A581-A497AF821DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3300809E-D1CF-459E-A581-A497AF821DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3300809E-D1CF-459E-A581-A497AF821DB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

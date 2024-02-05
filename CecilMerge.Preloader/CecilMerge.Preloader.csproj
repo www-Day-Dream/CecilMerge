@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net35</TargetFramework>
+        <DebugSymbols>True</DebugSymbols>
+        <DebugType>Embedded</DebugType>
+        <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+        <LangVersion>7.3</LangVersion>
+        <AssemblyName>CecilMerge.Preloader</AssemblyName>
+        <RootNamespace>CecilMerge</RootNamespace> <!-- Explicit Language Versioning for sanity because it's what our TargetFrameworks support -->
+        <OutputPath >./bin/</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="All"/>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="All" />
+        <ProjectReference Include="../CecilMerge.Runtime/CecilMerge.Runtime.csproj" PrivateAssets="All"/>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="./bin/net35/CecilMerge.Preloader.dll" DestinationFiles="$(BepInExPath)/patchers/CecilMerge.Preloader.dll" />
+    </Target>
+
+</Project>
