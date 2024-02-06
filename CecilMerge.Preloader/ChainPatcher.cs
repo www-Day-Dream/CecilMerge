@@ -1,18 +1,25 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx;
+using BepInEx.Logging;
 using Mono.Cecil;
 
 //using CecilMerge.Runtime.Preloader;
 
 namespace CecilMerge
 {
-    internal static class ChainPatcher
+    public static class ChainPatcher
     {
-        internal static PluginAnalyzer Analyzer { get; private set; } = new PluginAnalyzer();
+        internal const string GenericName = "CecilMerge";
+        internal static AssemblyCache Cache { get; private set; } = new AssemblyCache();
+
+        
         public static IEnumerable<string> TargetDLLs => new string[] { "Assembly-CSharp.dll" };
+        
         public static void Initialize()
         {
-            Analyzer.Analyze(Paths.PluginPath);
+            Cache.CacheAssemblyInformation(Paths.PluginPath).ToArray();
         }
 
         public static void Patch(AssemblyDefinition assemblyToPatch)
@@ -21,7 +28,7 @@ namespace CecilMerge
 
         public static void Finish()
         {
-            Analyzer.Dispose();
+            Cache.Dispose();
         }
     }
 }

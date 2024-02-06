@@ -4,7 +4,11 @@ namespace CecilMerge.Internal
 {
     public class CecilMergeAttributeAttribute : Attribute
     {
-        internal const AttributeTargets InjectionSites = AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Delegate;
+        internal const AttributeTargets InjectionSites = 
+            AttributeTargets.Class | AttributeTargets.Method | 
+            AttributeTargets.Property | AttributeTargets.Field | 
+            AttributeTargets.Event | AttributeTargets.Delegate | 
+            AttributeTargets.Enum;
 
         protected CecilMergeType MergeType { get; private set; }
 

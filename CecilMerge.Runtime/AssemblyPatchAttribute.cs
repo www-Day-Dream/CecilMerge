@@ -40,4 +40,13 @@ namespace CecilMerge
             MergeType.AfterGUIDs = pluginGuids;
         }
     }
+
+    [AttributeUsage(InjectionSites)]
+    public class CecilAppendAttribute : CecilMergeAttributeAttribute
+    {
+    }
+    [AttributeUsage(InjectionSites)]
+    public class CecilPrependAttribute : CecilMergeAttributeAttribute
+    {
+    }
 }
