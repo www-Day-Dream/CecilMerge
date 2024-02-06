@@ -8,7 +8,6 @@
         <LangVersion>7.3</LangVersion>
         <AssemblyName>CecilMerge.Preloader</AssemblyName>
         <RootNamespace>CecilMerge</RootNamespace> <!-- Explicit Language Versioning for sanity because it's what our TargetFrameworks support -->
-        <OutputPath >./bin/</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,9 +17,5 @@
         
         <Publicize Include="BepInEx"/>
     </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="./bin/net35/CecilMerge.Preloader.dll" DestinationFiles="$(BepInExPath)/patchers/CecilMerge.Preloader.dll" />
-    </Target>
 
 </Project>

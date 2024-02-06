@@ -19,7 +19,15 @@ namespace CecilMerge
         
         public static void Initialize()
         {
-            Cache.CacheAssemblyInformation(Paths.PluginPath).ToArray();
+            Cache.CacheAssemblyInformation(Paths.PluginPath);
+            foreach (var keyValuePair in Cache.Data)
+            {
+                CecilLog.LogVerbose(
+                    "File: '" + keyValuePair.Key + "'",
+                    keyValuePair.Value.Merges.Aggregate("Merges: ", 
+                        (s, merge) => s + (s.Length > "Merges: ".Length ? "\n" : "") + 
+                                      merge.Module.Name + "::" + merge.Type.FullName));
+            }
         }
 
         public static void Patch(AssemblyDefinition assemblyToPatch)

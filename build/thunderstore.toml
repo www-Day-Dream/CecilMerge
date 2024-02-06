@@ -1,0 +1,42 @@
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "www_Day_Dream"
+name = "CecilMerge"
+description = "BepInEx 5.4.2100 Preload Patcher that analyzes BepInPlugins installed to generate non-conflicting, compliant managed assembly modifications."
+websiteUrl = "https://github.com/www-Day-Dream/CecilMerge"
+containsNsfwContent = false
+
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2100"
+
+[build]
+icon = "./icon.png"
+readme = "../README.md"
+outdir = "../bin"
+
+[[build.copy]]
+source  = "../bin/net35/CecilMerge.Preloader.dll"
+target = "/BepInEx/patchers/"
+
+[[build.copy]]
+source  = "../bin/net35/CecilMerge.Runtime.dll"
+target = "/BepInEx/patchers/"
+
+[[build.copy]]
+source = "../README.md"
+target = "README.md"
+
+[[build.copy]]
+source = "../LICENSE.txt"
+target = "LICENSE.txt"
+
+[publish]
+communities = ["lethal-company"]
+
+[publish.categories]
+lethal-company = ["bepinex", "libraries", "tools"]

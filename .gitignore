@@ -3,5 +3,6 @@
 **/packages/
 **/.idea/
 **.user
+**/tools/
 riderModule.iml
 /_ReSharper.Caches/

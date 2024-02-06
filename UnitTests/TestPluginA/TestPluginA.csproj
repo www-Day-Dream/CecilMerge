@@ -5,7 +5,6 @@
         <DebugSymbols>True</DebugSymbols>
         <DebugType>Embedded</DebugType>
         <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
-        <OutputPath >./bin/</OutputPath>
     </PropertyGroup>
     
     <ItemGroup>
@@ -19,9 +18,5 @@
         <Publicize Include="Assembly-CSharp"/>
         <Publicize Include="UnityEngine.CoreModule"/>
     </ItemGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy ContinueOnError="true" SourceFiles="./bin/netstandard2.1/TestPluginA.dll" DestinationFiles="$(BepInExPath)/plugins/TestPluginA.dll"/>
-    </Target>
 
 </Project>

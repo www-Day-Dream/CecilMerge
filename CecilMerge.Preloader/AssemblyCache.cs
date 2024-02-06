@@ -23,26 +23,18 @@ namespace CecilMerge
 
         private static string CleanPluginPath(string path, string directory) => path.Replace(directory, "");
         
-        internal IEnumerable<KeyValuePair<AssemblyDefinition, AssemblyData>> CacheAssemblyInformation(string path)
+        internal void CacheAssemblyInformation(string path)
         {
             LoadCache();
             
             foreach (var file in Directory
                          .GetFiles(Path.GetFullPath(path), "*.dll", SearchOption.AllDirectories))
             {
-                if (Data.TryGetValue(file, out var assemblyData) && assemblyData.DllFileSame && PatcherFileSame)
-                {
-                    CecilLog.LogWarning("Cached dll data '" + assemblyData.SimpleName +
-                                     "'. Last known DLL write " +
-                                     "time: " + DateTime.FromFileTimeUtc(assemblyData.FileTimestampLastSave).ToLocalTime().ToString("g"));
-                    continue;
-                }
-                
-                // Analyze the dll now
-                AssemblyDefinition assembly;
+                // Load the dll for analysis or resolving
+                AssemblyDefinition assemblyDefinition;
                 try
                 {
-                    assembly = AssemblyDefinition.ReadAssembly(file, TypeLoader.ReaderParameters);
+                    assemblyDefinition = AssemblyDefinition.ReadAssembly(file, TypeLoader.ReaderParameters);
                 }
                 catch (BadImageFormatException ex)
                 {
@@ -56,19 +48,25 @@ namespace CecilMerge
                     continue;
                 }
                 
-                assemblyData = new AssemblyData
+                if (Data.TryGetValue(file, out var assemblyData) && assemblyData.DllFileSame && PatcherFileSame)
                 {
-                    SimpleName = assembly.MainModule.Name,
-                    DllFileDir = file
-                };
+                    MergeEvaluator.Resolve(assemblyData.Merges, assemblyDefinition);
+                    CecilLog.LogWarning("Loaded cached dll data '" + assemblyData.SimpleName +
+                                     "'. Last known DLL write " +
+                                     "time: " + DateTime.FromFileTimeUtc(assemblyData.FileTimestampLastSave).ToLocalTime().ToString("g"));
+                    assemblyDefinition.Dispose();
+                    continue;
+                }
 
-                yield return new KeyValuePair<AssemblyDefinition, AssemblyData>(assembly, assemblyData);
-                    
-            
-                Data[file] = assemblyData;
-                    
-                CecilLog.LogInfo("Cached dll data '" + assemblyData.SimpleName +
+                Data[file] = new AssemblyData
+                {
+                    SimpleName = assemblyDefinition.MainModule.Name,
+                    DllFileDir = file,
+                    Merges = MergeEvaluator.Evaluate(assemblyDefinition)
+                };
+                CecilLog.LogInfo("Loaded and cached dll data '" + Data[file].SimpleName +
                                  "' from file located at '" + CleanPluginPath(file, path) + "'.");
+                assemblyDefinition.Dispose();
             }
             
             SaveCache();
@@ -127,6 +125,8 @@ namespace CecilMerge
             internal string SimpleName;
             internal string DllFileDir;
             internal long FileTimestampLastSave;
+            internal Merge[] Merges;
+            
             internal bool DllFileSame => FileTimestampLastSave == FileTimestamp;
 
             private long FileTimestamp =>
@@ -136,11 +136,24 @@ namespace CecilMerge
             {
                 SimpleName = binaryReader.ReadString();
                 FileTimestampLastSave = binaryReader.ReadInt64();
+
+                Merges = new Merge[binaryReader.ReadInt32()];
+                for (var i = 0; i < Merges.Length; i++)
+                {
+                    Merges[i] = new Merge();
+                    Merges[i].Load(binaryReader);
+                }
             }
             internal void Save(BinaryWriter binaryWriter)
             {
                 binaryWriter.Write(SimpleName);
                 binaryWriter.Write(FileTimestamp);
+
+                binaryWriter.Write(Merges.Length);
+                foreach (var merge in Merges)
+                {
+                    merge.Save(binaryWriter);
+                }
             }
         }
     }

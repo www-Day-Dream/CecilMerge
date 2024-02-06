@@ -8,11 +8,6 @@
         <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
         <LangVersion>7.3</LangVersion>
         <RootNamespace>CecilMerge</RootNamespace> <!-- Explicit Language Versioning for sanity because it's what our TargetFrameworks support -->
-        <OutputPath >./bin/</OutputPath>
     </PropertyGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy ContinueOnError="true" SourceFiles="./bin/netstandard2.0/CecilMerge.Runtime.dll" DestinationFiles="$(BepInExPath)/patchers/CecilMerge.Runtime.dll"/>
-    </Target>
 
 </Project>
