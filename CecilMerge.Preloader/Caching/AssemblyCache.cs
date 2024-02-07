@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using BepInEx;
 using BepInEx.Bootstrap;
+using CecilMerge.Puzzle;
 using Mono.Cecil;
 
-namespace CecilMerge
+namespace CecilMerge.Caching
 {
     internal class AssemblyCache : IDisposable
     {
-        private const string CacheName = "CecilMerge.Runtime.PluginData.dat";
+        private const string CacheName = "CecilMerge.PluginData.dat";
         private static string CacheFilePath => Path.Combine(Paths.CachePath, CacheName);
 
         internal Dictionary<string, AssemblyData> Data = new Dictionary<string, AssemblyData>();
@@ -50,7 +50,7 @@ namespace CecilMerge
                 
                 if (Data.TryGetValue(file, out var assemblyData) && assemblyData.DllFileSame && PatcherFileSame)
                 {
-                    MergeEvaluator.Resolve(assemblyData.Merges, assemblyDefinition);
+                    Merge.Resolve(assemblyData.Merges, assemblyDefinition);
                     CecilLog.LogWarning("Loaded cached dll data '" + assemblyData.SimpleName +
                                      "'. Last known DLL write " +
                                      "time: " + DateTime.FromFileTimeUtc(assemblyData.FileTimestampLastSave).ToLocalTime().ToString("g"));
@@ -60,9 +60,10 @@ namespace CecilMerge
 
                 Data[file] = new AssemblyData
                 {
+                    IsValidated = true,
                     SimpleName = assemblyDefinition.MainModule.Name,
                     DllFileDir = file,
-                    Merges = MergeEvaluator.Evaluate(assemblyDefinition)
+                    Merges = Merge.Evaluate(assemblyDefinition)
                 };
                 CecilLog.LogInfo("Loaded and cached dll data '" + Data[file].SimpleName +
                                  "' from file located at '" + CleanPluginPath(file, path) + "'.");
@@ -120,7 +121,7 @@ namespace CecilMerge
             Data = null;
         }
 
-        internal class AssemblyData
+        internal class AssemblyData : ICecilCacheable
         {
             internal string SimpleName;
             internal string DllFileDir;
@@ -132,7 +133,8 @@ namespace CecilMerge
             private long FileTimestamp =>
                 File.Exists(DllFileDir) ? File.GetLastWriteTimeUtc(DllFileDir).ToFileTimeUtc() : -1;
 
-            internal void Load(BinaryReader binaryReader)
+            public bool IsValidated { get; set; }
+            public void Load(BinaryReader binaryReader)
             {
                 SimpleName = binaryReader.ReadString();
                 FileTimestampLastSave = binaryReader.ReadInt64();
@@ -143,8 +145,10 @@ namespace CecilMerge
                     Merges[i] = new Merge();
                     Merges[i].Load(binaryReader);
                 }
+
+                IsValidated = true;
             }
-            internal void Save(BinaryWriter binaryWriter)
+            public void Save(BinaryWriter binaryWriter)
             {
                 binaryWriter.Write(SimpleName);
                 binaryWriter.Write(FileTimestamp);

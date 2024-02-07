@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Cake.Common;
 using Cake.Common.IO;
@@ -12,8 +13,10 @@ using Cake.Common.Tools.MSBuild;
 using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
+using Cake.Core.IO.Arguments;
 using Cake.Frosting;
 using Spectre.Console;
+using Enumerable = System.Linq.Enumerable;
 
 // ReSharper disable All
 
@@ -73,6 +76,16 @@ public class BuildLifetime : FrostingLifetime<BuildContext>
 
     public override void Teardown(BuildContext context, ITeardownContext info)
     {
+        var arg = context.Argument("Launch", string.Empty);
+        
+        if (arg != string.Empty && context.InstallToBepInEx && context.FileExists(arg))
+            context.StartAndReturnProcess(arg, new ProcessSettings()
+            {
+                WorkingDirectory = FilePath.FromString(arg).GetDirectory(),
+                Arguments = new ProcessArgumentBuilder()
+                    .Append("--doorstop-enable true")
+                    .Append("--doorstop-target " + context.BepInExPath.Combine("./core/BepInEx.Preloader.dll"))
+            });
     }
 }
 

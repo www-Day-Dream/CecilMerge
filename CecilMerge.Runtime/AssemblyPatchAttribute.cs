@@ -1,52 +1,26 @@
 using System;
-using CecilMerge.Internal;
-
 namespace CecilMerge
 {
-    public class CecilMergeType
-    {
-        public Type PatchType { get; internal set; }
-        public string[] BeforeGUIDs { get; internal set; }
-        public string[] AfterGUIDs { get; internal set; }
-
-        public CecilMergeType(Type patchType)
-        {
-            PatchType = patchType;
-        }
-    }
-
     [AttributeUsage(InjectionSites)]
-    public class CecilPatchAttribute : CecilMergeAttributeAttribute
+    public class CecilPatchAttribute : Attribute
     {
-        public CecilPatchAttribute(Type patchType = default) : base(patchType)
+        private const AttributeTargets InjectionSites = 
+            AttributeTargets.Class | 
+            AttributeTargets.Enum;
+        
+        public CecilPatchAttribute(Type patchType)
         {
         }
     }
 
     [AttributeUsage(InjectionSites)]
-    public class CecilBeforeAttribute : CecilMergeAttributeAttribute
+    public class CecilMergeMethodAttribute : Attribute
     {
-        public CecilBeforeAttribute(params string[] pluginGuids)
+        private const AttributeTargets InjectionSites =
+            AttributeTargets.Method;
+        
+        public CecilMergeMethodAttribute(string targetName = default, bool injectBody = false)
         {
-            MergeType.BeforeGUIDs = pluginGuids;
         }
-    }
-    
-    [AttributeUsage(InjectionSites)]
-    public class CecilAfterAttribute : CecilMergeAttributeAttribute
-    {
-        public CecilAfterAttribute(params string[] pluginGuids)
-        {
-            MergeType.AfterGUIDs = pluginGuids;
-        }
-    }
-
-    [AttributeUsage(InjectionSites)]
-    public class CecilAppendAttribute : CecilMergeAttributeAttribute
-    {
-    }
-    [AttributeUsage(InjectionSites)]
-    public class CecilPrependAttribute : CecilMergeAttributeAttribute
-    {
     }
 }

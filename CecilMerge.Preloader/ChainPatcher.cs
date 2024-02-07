@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
-using BepInEx.Logging;
+using CecilMerge.Caching;
 using Mono.Cecil;
 
 //using CecilMerge.Runtime.Preloader;
@@ -25,8 +24,10 @@ namespace CecilMerge
                 CecilLog.LogVerbose(
                     "File: '" + keyValuePair.Key + "'",
                     keyValuePair.Value.Merges.Aggregate("Merges: ", 
-                        (s, merge) => s + (s.Length > "Merges: ".Length ? "\n" : "") + 
-                                      merge.Module.Name + "::" + merge.Type.FullName));
+                        (s, merge) => s + "\n" + merge.DeclaringType.ResolvedTypeDef.Module.Name + ": " + 
+                                      merge.DeclaringType.ResolvedTypeDef.Name + " --> " + merge.PatchedType.ResolvedTypeRef.FullName +
+                                      merge.MethodMerges.Aggregate("", (s1, methodMerge) => s1 + (s1.Length > 0 ? ", " : "") + 
+                                          methodMerge.TargetName + " " + methodMerge.CopyIL)));
             }
         }
 
